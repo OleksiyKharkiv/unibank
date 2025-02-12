@@ -9,41 +9,38 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-
+@Entity
+@Table(name = "accounts")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table
 public class Account {
     @Id
-    @Column(name = "account")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @Column(name = "user_id")
-    private String userId;
-    @Column(name = "account_number")
+    @Column(name = "account_number", nullable = false, unique = true)
     private String accountNumber;
-    @Column(name = "balance")
+    @Column(name = "balance", nullable = false)
     private BigDecimal balance;
-    @Column(name = "currency_code")
+    @Column(name = "currency_code", nullable = false)
     private Currencies currency;
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Timestamp createdAt;
 
     @ManyToOne()
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "debit_account_id")
-    private Set<Transaction> debitTransaction;
+    @OneToMany(mappedBy = "from_account", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Transaction> fromAccounts= new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "credit_account_id")
-    private Set<Transaction> creditTransaction;
+    @OneToMany(mappedBy = "to_account",cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Transaction> toAccounts = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
@@ -55,20 +52,17 @@ public class Account {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, currency, user);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "Account{" +
                 "id='" + id + '\'' +
-                ", userId='" + userId + '\'' +
                 ", accountNumber" + accountNumber +
                 ", balance=" + balance +
                 ", currency='" + currency + '\'' +
                 ", user=" + user +
-                ", debitTransaction" + debitTransaction +
-                ", creditTransaction" + creditTransaction +
                 ", createdAt" + createdAt +
                 '}';
     }
