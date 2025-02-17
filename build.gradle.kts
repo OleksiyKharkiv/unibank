@@ -40,6 +40,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation ("org.springdoc:springdoc-openapi-ui")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+    implementation ("org.mapstruct:mapstruct:1.4.2.Final")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
@@ -50,7 +51,9 @@ dependencies {
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:postgresql")
+    testImplementation ("org.testng:testng:6.10", "org.easytesting:fest-assert:1.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    annotationProcessor ("org.mapstruct:mapstruct-processor:1.6.0")
 }
 
 hibernate {
